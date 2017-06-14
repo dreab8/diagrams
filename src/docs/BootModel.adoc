@@ -14,12 +14,18 @@ interface ValueMapping
 interface EmbeddedValueMapping
 interface EmbeddedMapping
 interface ManagedTypeMappingImplementor
+interface EntityMapping
+interface MappedSuperclassMapping
 
 interface IdentifiableTypeMapping
 interface IdentifiableTypeMappingImplementor
 
+interface MappedSuperclassImplementor
+
 abstract AbstractIdentifiableTypeMapping
 abstract AbstractManagedTypeMapping
+abstract PersistentClass
+abstract AbstractMappedSuperclassMapping
 
 class Component
 
@@ -33,17 +39,27 @@ ManagedTypeMapping <|-- IdentifiableTypeMapping
 ManagedTypeMapping <|-- ManagedTypeMappingImplementor
 
 IdentifiableTypeMapping <|-- IdentifiableTypeMappingImplementor
+IdentifiableTypeMapping <|-- EntityMapping
+IdentifiableTypeMapping <|-- MappedSuperclassMapping
+
 ManagedTypeMappingImplementor <|-- IdentifiableTypeMappingImplementor
 ManagedTypeMappingImplementor<|-- AbstractManagedTypeMapping
 
 AbstractManagedTypeMapping <|-- AbstractIdentifiableTypeMapping
+AbstractIdentifiableTypeMapping <|-- PersistentClass
+AbstractIdentifiableTypeMapping <|-- AbstractMappedSuperclassMapping
+
 IdentifiableTypeMappingImplementor <|.. AbstractIdentifiableTypeMapping
+
+
+EntityMapping <|.. PersistentClass
 
 ValueMapping <|-- EmbeddedValueMapping
 
 EmbeddedValueMapping <|.. Component
 MetaAttributable <|.. Component
 ValueMappingContainer --> ValueMapping : valueMapping
+
 
 ManagedTypeMapping --> "n" PersistentAttributeMapping : declaredPersistentAttributes
 ManagedTypeMapping --> "n" PersistentAttributeMapping : persistentAttributes

@@ -1,0 +1,115 @@
+[plantuml,ManagedTypeMapping,png]
+.ManagedTypeMapping
+....
+@startuml
+skinparam handwritten true
+
+interface ManagedTypeMapping {
+String getName()
+}
+interface PersistentAttributeMapping
+interface ValueMappingContainer
+interface MetaAttributable
+interface ValueMapping
+interface EmbeddedValueMapping
+interface EmbeddedMapping
+interface ManagedTypeMappingImplementor
+
+interface IdentifiableTypeMapping
+interface IdentifiableTypeMappingImplementor
+
+abstract AbstractIdentifiableTypeMapping
+abstract AbstractManagedTypeMapping
+
+class Component
+
+
+
+ValueMappingContainer <|-- EmbeddedMapping
+
+ManagedTypeMapping <|-- EmbeddedValueMapping
+ManagedTypeMapping <|-- EmbeddedMapping
+ManagedTypeMapping <|-- IdentifiableTypeMapping
+ManagedTypeMapping <|-- ManagedTypeMappingImplementor
+
+IdentifiableTypeMapping <|-- IdentifiableTypeMappingImplementor
+ManagedTypeMappingImplementor <|-- IdentifiableTypeMappingImplementor
+ManagedTypeMappingImplementor<|-- AbstractManagedTypeMapping
+
+AbstractManagedTypeMapping <|-- AbstractIdentifiableTypeMapping
+IdentifiableTypeMappingImplementor <|.. AbstractIdentifiableTypeMapping
+
+ValueMapping <|-- EmbeddedValueMapping
+
+EmbeddedValueMapping <|.. Component
+MetaAttributable <|.. Component
+ValueMappingContainer --> ValueMapping : valueMapping
+
+ManagedTypeMapping --> "n" PersistentAttributeMapping : declaredPersistentAttributes
+ManagedTypeMapping --> "n" PersistentAttributeMapping : persistentAttributes
+ManagedTypeMapping --> "n" ManagedTypeMapping : SuperManagedTypeMapping
+
+EmbeddedMapping --> EmbeddedValueMapping : valueMapping
+
+
+@enduml
+....
+
+
+[plantuml,ValueMapping,png]
+.ValueMapping
+....
+@startuml
+skinparam handwritten true
+
+interface MetaAttributable
+interface ValueMapping{
+	MappedTable getMappedTable();
+	List<MappedColumn> getMappedColumns();
+	FetchMode getFetchMode();
+	MetadataBuildingContext getMetadataBuildingContext();
+	JavaTypeDescriptor<J> getJavaTypeDescriptor();
+}
+interface EmbeddedValueMapping
+
+
+interface Value
+interface KeyValue
+class SimpleValue
+class Component
+
+
+ValueMapping <|-- EmbeddedValueMapping
+ValueMapping <|-- Value
+
+Value <|-- KeyValue
+KeyValue <|.. SimpleValue
+SimpleValue <|-- Component
+EmbeddedValueMapping <|.. Component
+MetaAttributable <|.. Component
+
+
+
+@enduml
+....
+
+[plantuml,PersistentAttributeMapping,png]
+.PersistentAttributeMapping
+....
+@startuml
+skinparam handwritten true
+
+interface PersistentAttributeMapping
+interface ValueMappingContainer{
+ValueMapping getValueMapping();
+}
+interface MetaAttributable
+interface ValueMapping
+
+
+ValueMappingContainer <|-- PersistentAttributeMapping
+MetaAttributable <|-- PersistentAttributeMapping
+
+
+@enduml
+....

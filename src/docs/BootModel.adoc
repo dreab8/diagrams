@@ -4,6 +4,8 @@
 @startuml
 skinparam handwritten true
 
+interface EntityMappingHierarchy
+
 interface ManagedTypeMapping {
 String getName()
 }
@@ -22,13 +24,20 @@ interface IdentifiableTypeMappingImplementor
 
 interface MappedSuperclassImplementor
 
+interface MappedTableJoin
+
 abstract AbstractIdentifiableTypeMapping
 abstract AbstractManagedTypeMapping
 abstract PersistentClass
 abstract AbstractMappedSuperclassMapping
 
 class Component
-
+class RootClass
+class Subclass
+class JoinedSubclass
+class SingleTableSubclass
+class UnionSubclass
+class MappedSuperclass
 
 
 ValueMappingContainer <|-- EmbeddedMapping
@@ -50,6 +59,20 @@ AbstractIdentifiableTypeMapping <|-- PersistentClass
 AbstractIdentifiableTypeMapping <|-- AbstractMappedSuperclassMapping
 
 IdentifiableTypeMappingImplementor <|.. AbstractIdentifiableTypeMapping
+IdentifiableTypeMappingImplementor <|-- MappedSuperclassImplementor
+
+MappedSuperclassImplementor <|.. AbstractMappedSuperclassMapping
+
+MappedSuperclassMapping <|-- MappedSuperclassImplementor
+
+AbstractMappedSuperclassMapping <|-- MappedSuperclass
+
+PersistentClass <|-- RootClass
+PersistentClass <|-- Subclass
+
+Subclass <|-- JoinedSubclass
+Subclass <|-- SingleTableSubclass
+Subclass <|-- UnionSubclass
 
 
 EntityMapping <|.. PersistentClass
@@ -61,11 +84,13 @@ MetaAttributable <|.. Component
 ValueMappingContainer --> ValueMapping : valueMapping
 
 
-ManagedTypeMapping --> "n" PersistentAttributeMapping : declaredPersistentAttributes
-ManagedTypeMapping --> "n" PersistentAttributeMapping : persistentAttributes
-ManagedTypeMapping --> "n" ManagedTypeMapping : SuperManagedTypeMapping
+ManagedTypeMapping --> "n" PersistentAttributeMapping : getDeclaredPersistentAttributes
+ManagedTypeMapping --> "n" PersistentAttributeMapping : getPersistentAttributes
+ManagedTypeMapping --> "n" ManagedTypeMapping : getSuperManagedTypeMapping
 
-EmbeddedMapping --> EmbeddedValueMapping : valueMapping
+EmbeddedMapping --> EmbeddedValueMapping : getValueMapping
+
+IdentifiableTypeMapping --> EntityMappingHierarchy : getEntityMappingHierarchy
 
 
 @enduml
@@ -116,16 +141,22 @@ MetaAttributable <|.. Component
 skinparam handwritten true
 
 interface PersistentAttributeMapping
-interface ValueMappingContainer{
-ValueMapping getValueMapping();
-}
+interface ValueMappingContainer
 interface MetaAttributable
 interface ValueMapping
 
+class Property
+class Backref
 
 ValueMappingContainer <|-- PersistentAttributeMapping
 MetaAttributable <|-- PersistentAttributeMapping
 
+ValueMappingContainer --> ValueMapping :getValueMapping
+
+PersistentAttributeMapping <|.. Property
+Property <|.. Backref
+Property <|.. IndexBackref
+Property <|.. SyntheticProperty
 
 @enduml
 ....

@@ -111,23 +111,75 @@ interface ValueMapping{
 	MetadataBuildingContext getMetadataBuildingContext();
 	JavaTypeDescriptor<J> getJavaTypeDescriptor();
 }
+interface BasicValueMapping{
+  MappedColumn getMappedColumn();
+  BasicType<J> resolveType();
+  AttributeConverterDefinition getAttributeConverterDefinition();
+}
 interface EmbeddedValueMapping
 
 
 interface Value
 interface KeyValue
+abstract ToOne
+abstract Collection
+abstract IndexedCollection
+abstract IdentifierCollection
 class SimpleValue
+class BasicValue
 class Component
-
+class DependentValue
+class ManyToOne
+class OneToOne
+class Any
+class OneToMany
+class Set
+class Bag
+class List
+class Map
+class Array
+class PrimitiveArray
+class IdentifierBag
 
 ValueMapping <|-- EmbeddedValueMapping
 ValueMapping <|-- Value
+ValueMapping <|-- BasicValueMapping
+
+BasicValueMapping <|-- BasicValue
 
 Value <|-- KeyValue
+Value <|-- OneToMany
+Value <|-- Collection
+
 KeyValue <|.. SimpleValue
+
+SimpleValue <|-- BasicValue
 SimpleValue <|-- Component
+SimpleValue <|-- ToOne
+SimpleValue <|-- Any
+
+BasicValue <|-- DependentValue
+
+ToOne <|-- ManyToOne
+ToOne <|-- OneToOne
+
 EmbeddedValueMapping <|.. Component
+
 MetaAttributable <|.. Component
+
+Collection <|-- Set
+Collection <|-- IndexedCollection
+Collection <|-- Bag
+Collection <|-- IdentifierCollection
+
+IdentifierCollection <|-- IdentifierBag
+
+IndexedCollection <|-- List
+IndexedCollection <|-- Map
+
+List <|-- Array
+
+Array <|-- PrimitiveArray
 
 
 
